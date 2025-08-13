@@ -1,310 +1,184 @@
-Welcome to your new TanStack app! 
+# Material Icon Preview Web
 
-# Getting Started
+A web-based visual preview tool for all icons in the VSCode Material Icon Theme extension. This project allows you to browse, search, and copy icon names and their associated file extensions/folder names.
 
-To run this application:
+## 🌐 Live Demo
+
+**Try it now:** [https://vscode-material-icon-preview.vercel.app/](https://vscode-material-icon-preview.vercel.app/)
+
+
+![](assets/20250813_154327_image.png)
+
+
+## 🎯 Why This Project?
+
+The VSCode Material Icon Theme is an amazing extension that provides beautiful icons for files and folders, but there's no easy way to visualize all available icons and their associations. This web tool solves that problem by providing:
+
+- **Visual Icon Browser**: See all 1000+ icons in a clean grid layout
+- **Smart Search**: Find icons by name, file extension, or folder name
+- **Easy Copy**: Click to copy icon names or associated file patterns
+- **Category Filtering**: Filter by file icons or folder icons
+- **Light/Dark Variants**: View icons with light theme variants when available
+
+## ✨ Features
+
+### 🔍 Comprehensive Search
+
+- Search by icon name (e.g., "react", "python", "folder-src")
+- Search by file extension (e.g., ".js", ".py", ".md")
+- Search by folder name (e.g., "node_modules", "src", "dist")
+
+### 📋 Smart Copy Functionality
+
+- **Hover on icon name**: Shows dropdown with all associated patterns
+- **Click to copy**: Each extension/filename/folder name is individually copyable
+- **Quick copy**: Click icon name to copy the icon identifier
+
+### 🎨 Icon Categories
+
+- **File Icons**: Icons for different file types and extensions
+- **Folder Icons**: Icons for specific folder names and purposes
+
+### 💡 Visual Indicators
+
+- **Category badges**: F for files, D for folders
+- **Light variants**: Toggle button for icons with light theme versions
+- **Missing icons**: Clear indication when icon files are not found
+
+## 🏗️ Technical Stack
+
+This is a TurboRepo monorepo containing:
+
+### Apps
+
+- **`vscode-material-icon-theme/`**: Cloned Material Icon Theme source
+- **`web/`**: React web application built with TanStack Router
+
+### Technologies Used
+
+- **Framework**: React 19 + TanStack Router
+- **Styling**: Tailwind CSS + shadcn/ui components
+- **Package Manager**: Bun
+- **Build Tool**: Vite
+- **Deployment**: Vercel
+
+## 🚀 Local Development
+
+### Prerequisites
+
+- [Bun](https://bun.sh/) (recommended) or Node.js 18+
+
+### Setup
 
 ```bash
+# Clone the repository
+git clone https://github.com/aqz236/vscode-material-icon-preview.git
+cd vscode-material-icon-preview
+
+# Install dependencies
 bun install
-bunx --bun run start
+
+# Start development server
+cd apps/web
+bun dev
 ```
 
-# Building For Production
+The web app will be available at `http://localhost:3000`
 
-To build this application for production:
+### Development Commands
 
 ```bash
-bunx --bun run build
+# Install dependencies for all packages
+bun install
+
+# Start web development server
+cd apps/web && bun dev
+
+# Build for production
+cd apps/web && bun build
+
+# Lint and format
+cd apps/web && bun run lint
+cd apps/web && bun run format
 ```
 
-## Testing
+## 📁 Project Structure
 
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
-
-```bash
-bunx --bun run test
+```
+material-icon-preview-web/
+├── apps/
+│   ├── vscode-material-icon-theme/     # Material Icon Theme source
+│   │   ├── icons/                      # 1000+ SVG icon files
+│   │   └── src/                        # TypeScript definitions
+│   └── web/                            # React web application
+│       ├── public/
+│       │   └── icons/                  # Copied SVG files
+│       ├── src/
+│       │   ├── components/
+│       │   │   └── IconGrid/          # Main UI components
+│       │   ├── data/                   # Icon data processing
+│       │   └── routes/                 # App routing
+│       └── package.json
+├── package.json                        # Root package.json
+└── turbo.json                         # TurboRepo configuration
 ```
 
-## Styling
+## 🎨 Icon Data Processing
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+The project processes icon definitions from the Material Icon Theme source:
 
+1. **File Icons** (`fileIcons.ts`): Maps file extensions and names to icons
+2. **Folder Icons** (`folderIcons.ts`): Maps folder names to icons
+3. **Icon Processing** (`iconData.ts`): Extracts and normalizes all icon information
 
-## Linting & Formatting
+### Example Icon Data
 
-
-This project uses [eslint](https://eslint.org/) and [prettier](https://prettier.io/) for linting and formatting. Eslint is configured using [tanstack/eslint-config](https://tanstack.com/config/latest/docs/eslint). The following scripts are available:
-
-```bash
-bunx --bun run lint
-bunx --bun run format
-bunx --bun run check
-```
-
-
-## Shadcn
-
-Add components using the latest version of [Shadcn](https://ui.shadcn.com/).
-
-```bash
-pnpx shadcn@latest add button
-```
-
-
-
-## Routing
-This project uses [TanStack Router](https://tanstack.com/router). The initial setup is a file based router. Which means that the routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add another a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
-```
-
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you use the `<Outlet />` component.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { Outlet, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-
-import { Link } from "@tanstack/react-router";
-
-export const Route = createRootRoute({
-  component: () => (
-    <>
-      <header>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-        </nav>
-      </header>
-      <Outlet />
-      <TanStackRouterDevtools />
-    </>
-  ),
-})
-```
-
-The `<TanStackRouterDevtools />` component is not required so you can remove it if you don't want it in your layout.
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-const peopleRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/people",
-  loader: async () => {
-    const response = await fetch("https://swapi.dev/api/people");
-    return response.json() as Promise<{
-      results: {
-        name: string;
-      }[];
-    }>;
-  },
-  component: () => {
-    const data = peopleRoute.useLoaderData();
-    return (
-      <ul>
-        {data.results.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    );
-  },
-});
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-### React-Query
-
-React-Query is an excellent addition or alternative to route loading and integrating it into you application is a breeze.
-
-First add your dependencies:
-
-```bash
-bun install @tanstack/react-query @tanstack/react-query-devtools
-```
-
-Next we'll need to create a query client and provider. We recommend putting those in `main.tsx`.
-
-```tsx
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-// ...
-
-const queryClient = new QueryClient();
-
-// ...
-
-if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
-
-  root.render(
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  );
+```typescript
+{
+  name: "folder-node",
+  category: "folder",
+  folderNames: ["node", "nodejs", "node_modules"],
+  description: "Folder icon for node, nodejs, node_modules"
 }
 ```
 
-You can also add TanStack Query Devtools to the root route (optional).
+## 🤝 Contributing
 
-```tsx
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+Contributions are welcome! This project helps developers working with the Material Icon Theme to quickly find and use the right icons.
 
-const rootRoute = createRootRoute({
-  component: () => (
-    <>
-      <Outlet />
-      <ReactQueryDevtools buttonPosition="top-right" />
-      <TanStackRouterDevtools />
-    </>
-  ),
-});
-```
+### How to Contribute
 
-Now you can use `useQuery` to fetch your data.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-```tsx
-import { useQuery } from "@tanstack/react-query";
+### Areas for Contribution
 
-import "./App.css";
+- UI/UX improvements
+- Additional search functionality
+- Performance optimizations
+- Mobile responsiveness enhancements
+- Icon metadata enrichment
 
-function App() {
-  const { data } = useQuery({
-    queryKey: ["people"],
-    queryFn: () =>
-      fetch("https://swapi.dev/api/people")
-        .then((res) => res.json())
-        .then((data) => data.results as { name: string }[]),
-    initialData: [],
-  });
+## 📄 License
 
-  return (
-    <div>
-      <ul>
-        {data.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-export default App;
-```
+## 🙏 Acknowledgments
 
-You can find out everything you need to know on how to use React-Query in the [React-Query documentation](https://tanstack.com/query/latest/docs/framework/react/overview).
+- **[Material Icon Theme](https://github.com/material-extensions/vscode-material-icon-theme)**: The amazing VSCode extension that this tool showcases
+- **[shadcn/ui](https://ui.shadcn.com/)**: For the beautiful UI components
+- **[TanStack Router](https://tanstack.com/router)**: For the robust routing solution
+- **[Tailwind CSS](https://tailwindcss.com/)**: For the utility-first CSS framework
 
-## State Management
+## 🔗 Related Links
 
-Another common requirement for React applications is state management. There are many options for state management in React. TanStack Store provides a great starting point for your project.
+- [VSCode Material Icon Theme Extension](https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme)
+- [Material Icon Theme GitHub](https://github.com/material-extensions/vscode-material-icon-theme)
+- [Live Preview Tool](https://vscode-material-icon-preview.vercel.app/)
 
-First you need to add TanStack Store as a dependency:
+---
 
-```bash
-bun install @tanstack/store
-```
-
-Now let's create a simple counter in the `src/App.tsx` file as a demonstration.
-
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store } from "@tanstack/store";
-import "./App.css";
-
-const countStore = new Store(0);
-
-function App() {
-  const count = useStore(countStore);
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-    </div>
-  );
-}
-
-export default App;
-```
-
-One of the many nice features of TanStack Store is the ability to derive state from other state. That derived state will update when the base state updates.
-
-Let's check this out by doubling the count using derived state.
-
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store, Derived } from "@tanstack/store";
-import "./App.css";
-
-const countStore = new Store(0);
-
-const doubledStore = new Derived({
-  fn: () => countStore.state * 2,
-  deps: [countStore],
-});
-doubledStore.mount();
-
-function App() {
-  const count = useStore(countStore);
-  const doubledCount = useStore(doubledStore);
-
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-      <div>Doubled - {doubledCount}</div>
-    </div>
-  );
-}
-
-export default App;
-```
-
-We use the `Derived` class to create a new store that is derived from another store. The `Derived` class has a `mount` method that will start the derived store updating.
-
-Once we've created the derived store we can use it in the `App` component just like we would any other store using the `useStore` hook.
-
-You can find out everything you need to know on how to use TanStack Store in the [TanStack Store documentation](https://tanstack.com/store/latest).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
+Made with ❤️ to help developers find the perfect icons for their projects.
