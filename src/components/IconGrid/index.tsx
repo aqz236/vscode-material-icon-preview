@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { getAllIcons, getIconsByCategory, searchIcons } from '../../data/iconData';
 import IconCard from './IconCard';
 import type { IconInfo } from '../../data/iconData';
@@ -7,7 +7,23 @@ export default function IconGrid() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'file' | 'folder'>('all');
   const [currentPage, setCurrentPage] = useState(1);
+  const [isSticky, setIsSticky] = useState(false);
   const itemsPerPage = 50;
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  // 监听滚动事件
+  useEffect(() => {
+    const handleScroll = () => {
+      if (searchRef.current) {
+        const rect = searchRef.current.getBoundingClientRect();
+        const threshold = 50; // 滚动阈值，调整为更小的值
+        setIsSticky(window.scrollY > threshold);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const filteredIcons = useMemo(() => {
     let icons: Array<IconInfo> = [];
@@ -58,28 +74,41 @@ export default function IconGrid() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* 标题 */}
-      <div className="text-center mb-8">
+      {/* Header */}
+      {/* <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-          Material Icon 图标预览
+          Material Icon Preview
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          VSCode Material Icon Theme 的所有图标预览和搜索
+          Preview and search all icons from VSCode Material Icon Theme
         </p>
-      </div>
+      </div> */}
 
-      {/* 搜索和筛选区域 */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-8">
+      {/* Search and Filter Area */}
+      <div 
+        ref={searchRef}
+        className={`transition-all duration-500 ease-out ${
+          isSticky 
+            ? 'fixed top-0 left-0 right-0 z-50 bg-white/15 dark:bg-black/25 backdrop-blur-xl backdrop-saturate-150 border-b border-white/20 dark:border-white/10 shadow-2xl shadow-black/10 dark:shadow-black/30' 
+            : 'bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700'
+        } ${isSticky ? 'px-6 py-4 mx-4 mt-4 rounded-2xl' : 'p-6'} mb-8`}
+        style={isSticky ? {
+          background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 100%)',
+          backdropFilter: 'blur(20px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        } : {}}
+      >
+        <div className={isSticky ? 'container mx-auto' : ''}>
         <div className="flex flex-col md:flex-row gap-4">
-          {/* 搜索框 */}
+          {/* Search Box */}
           <div className="flex-1">
             <label htmlFor="search" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              搜索图标
+              Search Icons
             </label>
             <input
               id="search"
               type="text"
-              placeholder="输入图标名称、文件扩展名或描述..."
+              placeholder="Enter icon name, file extension, or description..."
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -89,10 +118,10 @@ export default function IconGrid() {
             />
           </div>
 
-          {/* 类别筛选 */}
+          {/* Category Filter */}
           <div>
             <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              类别筛选
+              Category Filter
             </label>
             <select
               id="category"
@@ -103,25 +132,29 @@ export default function IconGrid() {
               }}
               className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
             >
-              <option value="all">全部 ({getAllIcons().length})</option>
-              <option value="file">文件图标 ({getIconsByCategory('file').length})</option>
-              <option value="folder">文件夹图标 ({getIconsByCategory('folder').length})</option>
+              <option value="all">All ({getAllIcons().length})</option>
+              <option value="file">File Icons ({getIconsByCategory('file').length})</option>
+              <option value="folder">Folder Icons ({getIconsByCategory('folder').length})</option>
             </select>
           </div>
         </div>
 
-        {/* 结果统计 */}
-        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
+        {/* Results Summary */}
+        {/* <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            找到 <span className="font-semibold text-blue-600 dark:text-blue-400">{filteredIcons.length}</span> 个图标
+            Found <span className="font-semibold text-blue-600 dark:text-blue-400">{filteredIcons.length}</span> icons
             {searchQuery && (
-              <span>，搜索: "<span className="font-semibold">{searchQuery}</span>"</span>
+              <span> for search: "<span className="font-semibold">{searchQuery}</span>"</span>
             )}
           </p>
+        </div> */}
         </div>
       </div>
 
-      {/* 图标网格 */}
+      {/* Spacer when search is sticky */}
+      {isSticky && <div className="h-[140px]" />}
+
+      {/* Icon Grid */}
       {currentIcons.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-4 mb-8">
           {currentIcons.map((icon) => (
@@ -145,15 +178,15 @@ export default function IconGrid() {
             </svg>
           </div>
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-            未找到图标
+            No Icons Found
           </h3>
           <p className="text-gray-600 dark:text-gray-400">
-            尝试调整搜索条件或选择不同的类别
+            Try adjusting your search criteria or selecting a different category
           </p>
         </div>
       )}
 
-      {/* 分页控件 */}
+      {/* Pagination Controls */}
       {totalPages > 1 && (
         <div className="flex items-center justify-center space-x-2">
           <button
@@ -161,7 +194,7 @@ export default function IconGrid() {
             disabled={currentPage === 1}
             className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
           >
-            上一页
+            Previous
           </button>
 
           {getPaginationRange().map((page) => (
@@ -183,7 +216,7 @@ export default function IconGrid() {
             disabled={currentPage === totalPages}
             className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
           >
-            下一页
+            Next
           </button>
         </div>
       )}
