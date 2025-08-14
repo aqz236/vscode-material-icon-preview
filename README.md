@@ -1,66 +1,65 @@
 # Material Icon Preview Web
 
-A web-based visual preview tool for all icons in the VSCode Material Icon Theme extension. This project allows you to browse, search, and copy icon names and their associated file extensions/folder names.
+A web-based visual preview tool for VSCode Material Icon Theme extension. Help developers quickly browse, search, and use all available icons.
 
-## 🌐 Live Demo
+## 🌐 Live
 
 **Try it now:** [https://vscode-material-icon-preview.vercel.app/](https://vscode-material-icon-preview.vercel.app/)
 
+![](assets/20250814_212823_image.png)
 
-![](assets/20250813_154327_image.png)
+## 🎯 About This Project
 
+VSCode Material Icon Theme is an excellent extension that provides beautiful icons for files and folders, but lacks an intuitive way to view all available icons and their association rules. This web tool perfectly solves this problem:
 
-## 🎯 Why This Project?
+- **📁 826+ Icons Display**: Browse all icons in a clean grid layout
+- **🔍 Smart Search**: Support fuzzy search to quickly find the icons you need
+- **🏷️ Category Filtering**: Filter by file icons or folder icons
+- **📋 One-Click Copy**: Click on an icon to copy its icon ID
+- **🌓 Light/Dark Toggle**: Some icons support light/dark themes, hover over the icon to show the toggle button in the top right corner
 
-The VSCode Material Icon Theme is an amazing extension that provides beautiful icons for files and folders, but there's no easy way to visualize all available icons and their associations. This web tool solves that problem by providing:
+## ✨ Core Features
 
-- **Visual Icon Browser**: See all 1000+ icons in a clean grid layout
-- **Smart Search**: Find icons by name, file extension, or folder name
-- **Easy Copy**: Click to copy icon names or associated file patterns
-- **Category Filtering**: Filter by file icons or folder icons
-- **Light/Dark Variants**: View icons with light theme variants when available
+### 🔍 Smart Fuzzy Search
 
-## ✨ Features
+- Support fuzzy search by icon name (e.g., "react", "python", "folder-src")
+- Real-time search results without waiting
 
-### 🔍 Comprehensive Search
+### 🏷️ Smart Category Filtering
 
-- Search by icon name (e.g., "react", "python", "folder-src")
-- Search by file extension (e.g., ".js", ".py", ".md")
-- Search by folder name (e.g., "node_modules", "src", "dist")
+- **File Icons**: Show all file type related icons
+- **Folder Icons**: Show all folder related icons
+- **Combined Filtering**: Support combination of search and category filtering
 
-### 📋 Smart Copy Functionality
+### 📋 Convenient Copy Function
 
-- **Hover on icon name**: Shows dropdown with all associated patterns
-- **Click to copy**: Each extension/filename/folder name is individually copyable
-- **Quick copy**: Click icon name to copy the icon identifier
+- **Click to Copy**: Directly click on an icon to copy its icon ID to clipboard
+- **Instant Feedback**: Show confirmation message after successful copy
+- **Accurate Identifier**: Copy the exact identifier of the icon for direct use in development
 
-### 🎨 Icon Categories
+### 🌓 Light/Dark Theme Support
 
-- **File Icons**: Icons for different file types and extensions
-- **Folder Icons**: Icons for specific folder names and purposes
+- **Auto Detection**: Some icons have light/dark theme variants
+- **Hover Hint**: When hovering over icons that support switching, a theme toggle button appears in the top right corner
+- **Real-time Preview**: View the icon's appearance in different themes in real-time
 
-### 💡 Visual Indicators
+## 🏗️ Tech Stack
 
-- **Category badges**: F for files, D for folders
-- **Light variants**: Toggle button for icons with light theme versions
-- **Missing icons**: Clear indication when icon files are not found
+This is a TurboRepo-based monorepo project, containing:
 
-## 🏗️ Technical Stack
+### Project Structure
 
-This is a TurboRepo monorepo containing:
-
-### Apps
-
-- **`vscode-material-icon-theme/`**: Cloned Material Icon Theme source
-- **`web/`**: React web application built with TanStack Router
+- **`dont-edit-me/vscode-material-icon-theme/`**: Cloned Material Icon Theme source code
+- **`web/`**: React-based web application
 
 ### Technologies Used
 
-- **Framework**: React 19 + TanStack Router
-- **Styling**: Tailwind CSS + shadcn/ui components
+- **Frontend Framework**: React 19 + TanStack Router
+- **Styling**: Tailwind CSS + shadcn/ui component library
 - **Package Manager**: Bun
 - **Build Tool**: Vite
 - **Deployment**: Vercel
+- **Virtualization**: @tanstack/react-virtual (optimizes rendering performance for large number of icons)
 
 ## 🚀 Local Development
 
@@ -79,106 +78,27 @@ cd vscode-material-icon-preview
 bun install
 
 # Start development server
-cd apps/web
 bun dev
 ```
 
 The web app will be available at `http://localhost:3000`
 
-### Development Commands
-
-```bash
-# Install dependencies for all packages
-bun install
-
-# Start web development server
-cd apps/web && bun dev
-
-# Build for production
-cd apps/web && bun build
-
-# Lint and format
-cd apps/web && bun run lint
-cd apps/web && bun run format
-```
-
-## 📁 Project Structure
-
-```
-material-icon-preview-web/
-├── apps/
-│   ├── vscode-material-icon-theme/     # Material Icon Theme source
-│   │   ├── icons/                      # 1000+ SVG icon files
-│   │   └── src/                        # TypeScript definitions
-│   └── web/                            # React web application
-│       ├── public/
-│       │   └── icons/                  # Copied SVG files
-│       ├── src/
-│       │   ├── components/
-│       │   │   └── IconGrid/          # Main UI components
-│       │   ├── data/                   # Icon data processing
-│       │   └── routes/                 # App routing
-│       └── package.json
-├── package.json                        # Root package.json
-└── turbo.json                         # TurboRepo configuration
-```
-
-## 🎨 Icon Data Processing
-
-The project processes icon definitions from the Material Icon Theme source:
-
-1. **File Icons** (`fileIcons.ts`): Maps file extensions and names to icons
-2. **Folder Icons** (`folderIcons.ts`): Maps folder names to icons
-3. **Icon Processing** (`iconData.ts`): Extracts and normalizes all icon information
-
-### Example Icon Data
-
-```typescript
-{
-  name: "folder-node",
-  category: "folder",
-  folderNames: ["node", "nodejs", "node_modules"],
-  description: "Folder icon for node, nodejs, node_modules"
-}
-```
-
-## 🤝 Contributing
-
-Contributions are welcome! This project helps developers working with the Material Icon Theme to quickly find and use the right icons.
-
-### How to Contribute
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Areas for Contribution
-
-- UI/UX improvements
-- Additional search functionality
-- Performance optimizations
-- Mobile responsiveness enhancements
-- Icon metadata enrichment
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+MIT License is a permissive open source license and one of the most commonly adopted open source licenses.
+
 ## 🙏 Acknowledgments
 
-- **[Material Icon Theme](https://github.com/material-extensions/vscode-material-icon-theme)**: The amazing VSCode extension that this tool showcases
-- **[shadcn/ui](https://ui.shadcn.com/)**: For the beautiful UI components
-- **[TanStack Router](https://tanstack.com/router)**: For the robust routing solution
-- **[Tailwind CSS](https://tailwindcss.com/)**: For the utility-first CSS framework
+### Core Dependencies
 
-## 🔗 Related Links
+- **[vscode-material-icon-theme](https://github.com/material-extensions/vscode-material-icon-theme)**: An excellent VSCode extension that brings visual enjoyment to developers, the core data source of this project
+- **[TanStack](https://tanstack.com/)**: Provides powerful tech stack support, including Router and Virtual libraries
+- **[Vercel](https://vercel.com/)**: Provides excellent online deployment services, allowing the project to run stably for free
 
-- [VSCode Material Icon Theme Extension](https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme)
-- [Material Icon Theme GitHub](https://github.com/material-extensions/vscode-material-icon-theme)
-- [Live Preview Tool](https://vscode-material-icon-preview.vercel.app/)
+### Technical Support
 
----
-
-Made with ❤️ to help developers find the perfect icons for their projects.
+- **[shadcn/ui](https://ui.shadcn.com/)**: Beautiful UI component library
+- **[Tailwind CSS](https://tailwindcss.com/)**: Utility-first CSS framework
+- **[React](https://react.dev/)**: Powerful frontend framework

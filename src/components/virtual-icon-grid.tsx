@@ -192,18 +192,20 @@ function MediumIconCard({ icon, onSelect }: BaseIconCardProps) {
   );
 }
 
-export interface VirtualIconGridProps {
+interface VirtualIconGridProps {
   icons: Array<IconInfo>;
-  size?: 'sm' | 'md';
-  onIconSelect?: (icon: IconInfo) => void;
+  size: 'sm' | 'md';
   className?: string;
+  scrollElement?: HTMLElement | null;
+  onIconSelect?: (icon: IconInfo) => void;
 }
 
 export function VirtualIconGrid({
   icons,
   size = 'md',
   onIconSelect,
-  className = ''
+  className = '',
+  scrollElement
 }: VirtualIconGridProps) {
   const parentRef = React.useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = React.useState(1280);
@@ -251,7 +253,7 @@ export function VirtualIconGrid({
   // 创建虚拟化器
   const virtualizer = useVirtualizer({
     count: totalRows,
-    getScrollElement: () => parentRef.current,
+    getScrollElement: () => scrollElement || (parentRef.current?.parentElement) || null,
     estimateSize: () => (size === 'sm' ? 80 : 140),
     overscan: 2,
   });
@@ -261,57 +263,51 @@ export function VirtualIconGrid({
   const gridGap = size === 'sm' ? 'gap-3' : 'gap-4';
 
   return (
-    <div className={`h-full ${className}`}>
+    <div className={className} ref={parentRef}>
       <div
-        ref={parentRef}
-        className="h-full overflow-auto"
-        style={{ contain: 'strict' }}
+        style={{
+          height: virtualizer.getTotalSize(),
+          width: '100%',
+          position: 'relative',
+        }}
       >
-        <div
-          style={{
-            height: virtualizer.getTotalSize(),
-            width: '100%',
-            position: 'relative',
-          }}
-        >
-          {items.map((virtualRow) => {
-            // 动态计算当前行的图标数据
-            const startIndex = virtualRow.index * columnsPerRow;
-            const endIndex = Math.min(startIndex + columnsPerRow, icons.length);
-            const rowIcons = icons.slice(startIndex, endIndex);
+        {items.map((virtualRow) => {
+          // 动态计算当前行的图标数据
+          const startIndex = virtualRow.index * columnsPerRow;
+          const endIndex = Math.min(startIndex + columnsPerRow, icons.length);
+          const rowIcons = icons.slice(startIndex, endIndex);
 
-            return (
-              <div
-                key={virtualRow.key}
-                data-index={virtualRow.index}
-                ref={virtualizer.measureElement}
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  transform: `translateY(${virtualRow.start}px)`,
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  padding: '16px',
-                }}
+          return (
+            <div
+              key={virtualRow.key}
+              data-index={virtualRow.index}
+              ref={virtualizer.measureElement}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                transform: `translateY(${virtualRow.start}px)`,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '16px',
+              }}
+            >
+              <div 
+                className={`flex ${gridGap} justify-center flex-wrap w-full max-w-7xl`}
               >
-                <div 
-                  className={`flex ${gridGap} justify-center flex-wrap w-full max-w-7xl`}
-                >
-                  {rowIcons.map((icon) => (
-                    <IconComponent
-                      key={`${icon.id}-${size}`}
-                      icon={icon}
-                      onSelect={onIconSelect}
-                    />
-                  ))}
-                </div>
+                {rowIcons.map((icon) => (
+                  <IconComponent
+                    key={`${icon.id}-${size}`}
+                    icon={icon}
+                    onSelect={onIconSelect}
+                  />
+                ))}
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

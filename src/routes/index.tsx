@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import type { IconCategory, IconInfo } from '@/lib/icons';
 import { loadIconsMetadata, searchIcons } from '@/lib/icons';
@@ -19,6 +19,7 @@ function App() {
   const [viewSize, setViewSize] = useState<'sm' | 'md'>('md');
   const [isLoading, setIsLoading] = useState(true);
   const [allIcons, setAllIcons] = useState<Array<IconInfo>>([]);
+  const scrollContainerRef = useRef<HTMLElement>(null);
 
   // Asynchronously load pre-generated icon data
   useEffect(() => {
@@ -79,11 +80,11 @@ function App() {
         totalCount={searchResult.totalCount}
       />
 
-      {/* 主内容区域 */}
-      <main className="flex-1 overflow-hidden">
-        <div className="max-w-7xl mx-auto h-full">
+      {/* 主内容区域 - 在这里添加滚动容器 */}
+      <main ref={scrollContainerRef} className="flex-1 overflow-auto">
+        <div className="max-w-7xl mx-auto">
           {isLoading ? (
-            <div className="flex items-center justify-center h-full">
+            <div className="flex items-center justify-center min-h-full">
               <div className="text-center">
                 <div className="text-gray-500 dark:text-gray-400">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
@@ -95,9 +96,10 @@ function App() {
             <VirtualIconGrid
               icons={searchResult.icons}
               size={viewSize}
+              scrollElement={scrollContainerRef.current}
             />
           ) : (
-            <div className="flex items-center justify-center h-full">
+            <div className="flex items-center justify-center min-h-full">
               <div className="text-center">
                 <div className="text-gray-500 dark:text-gray-400">
                   <svg
