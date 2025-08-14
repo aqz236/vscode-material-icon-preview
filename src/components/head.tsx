@@ -7,10 +7,12 @@ export function Head({
   searchTerm,
   category,
   iconPack,
+  colorFilter,
   viewSize,
   onSearchChange,
   onCategoryChange,
   onIconPackChange,
+  onColorFilterChange,
   onViewSizeChange,
   totalCount,
 }: HeadProps) {
@@ -31,8 +33,10 @@ export function Head({
             <Filters
               category={category}
               iconPack={iconPack}
+              colorFilter={colorFilter}
               onCategoryChange={onCategoryChange}
               onIconPackChange={onIconPackChange}
+              onColorFilterChange={onColorFilterChange}
             />
 
             {/* 视图大小控制和主题切换 */}

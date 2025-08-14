@@ -16,6 +16,7 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<IconCategory | undefined>();
   const [selectedIconPack, setSelectedIconPack] = useState<string | undefined>();
+  const [colorFilter, setColorFilter] = useState<{ color: string; radius: number } | undefined>();
   const [viewSize, setViewSize] = useState<'sm' | 'md'>('md');
   const [isLoading, setIsLoading] = useState(true);
   const [allIcons, setAllIcons] = useState<Array<IconInfo>>([]);
@@ -44,8 +45,8 @@ function App() {
     if (isLoading || allIcons.length === 0) {
       return { icons: [], totalCount: 0, categories: {} };
     }
-    return searchIcons(allIcons, searchTerm, selectedCategory, selectedIconPack);
-  }, [allIcons, searchTerm, selectedCategory, selectedIconPack, isLoading]);
+    return searchIcons(allIcons, searchTerm, selectedCategory, selectedIconPack, colorFilter);
+  }, [allIcons, searchTerm, selectedCategory, selectedIconPack, colorFilter, isLoading]);
 
   // 处理搜索和筛选变化
   const handleSearchChange = (term: string) => {
@@ -60,6 +61,10 @@ function App() {
     setSelectedIconPack(pack);
   };
 
+  const handleColorFilterChange = (filter?: { color: string; radius: number }) => {
+    setColorFilter(filter);
+  };
+
   const handleViewSizeChange = (size: 'sm' | 'md') => {
     setViewSize(size);
   };
@@ -72,10 +77,12 @@ function App() {
         searchTerm={searchTerm}
         category={selectedCategory}
         iconPack={selectedIconPack}
+        colorFilter={colorFilter}
         viewSize={viewSize}
         onSearchChange={handleSearchChange}
         onCategoryChange={handleCategoryChange}
         onIconPackChange={handleIconPackChange}
+        onColorFilterChange={handleColorFilterChange}
         onViewSizeChange={handleViewSizeChange}
         totalCount={searchResult.totalCount}
       />

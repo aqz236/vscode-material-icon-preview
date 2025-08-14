@@ -8,6 +8,7 @@ export interface IconInfo {
   iconId: string;
   hasLightVersion: boolean;
   lightIconPath?: string;
+  colors?: Array<string>; // HEX 颜色值数组
 }
 
 export type IconCategory = 'file' | 'folder' | 'language' | 'fileExtension' | 'fileName';
@@ -60,13 +61,47 @@ export async function loadIconsMetadata(): Promise<IconMetadata> {
 }
 
 /**
+ * 计算两个颜色之间的差异度
+ * 使用欧几里得距离计算 RGB 颜色空间中的距离
+ */
+function calculateColorDistance(color1: string, color2: string): number {
+  const hex1 = color1.replace('#', '')
+  const hex2 = color2.replace('#', '')
+  
+  const r1 = parseInt(hex1.substr(0, 2), 16)
+  const g1 = parseInt(hex1.substr(2, 2), 16)
+  const b1 = parseInt(hex1.substr(4, 2), 16)
+  
+  const r2 = parseInt(hex2.substr(0, 2), 16)
+  const g2 = parseInt(hex2.substr(2, 2), 16)
+  const b2 = parseInt(hex2.substr(4, 2), 16)
+  
+  return Math.sqrt(
+    Math.pow(r2 - r1, 2) + 
+    Math.pow(g2 - g1, 2) + 
+    Math.pow(b2 - b1, 2)
+  )
+}
+
+/**
+ * 检查颜色是否在选定范围内
+ */
+function isColorInRange(targetColor: string, selectedColor: string, radius: number): boolean {
+  const distance = calculateColorDistance(targetColor, selectedColor)
+  // 将半径映射到 0-441 的范围（RGB 最大距离约为 441）
+  const maxDistance = (radius / 100) * 441
+  return distance <= maxDistance
+}
+
+/**
  * 搜索和筛选图标
  */
 export function searchIcons(
   icons: Array<IconInfo>,
   searchTerm: string = '',
   category?: IconCategory,
-  pack?: string
+  pack?: string,
+  colorFilter?: { color: string; radius: number }
 ): IconSearchResult {
   let filteredIcons = icons;
 
@@ -78,6 +113,16 @@ export function searchIcons(
   // 按图标包过滤
   if (pack) {
     filteredIcons = filteredIcons.filter(icon => icon.pack === pack);
+  }
+
+  // 按颜色过滤
+  if (colorFilter) {
+    filteredIcons = filteredIcons.filter(icon => {
+      if (!icon.colors || icon.colors.length === 0) return false;
+      return icon.colors.some(color => 
+        isColorInRange(color, colorFilter.color, colorFilter.radius)
+      );
+    });
   }
 
   // 模糊搜索

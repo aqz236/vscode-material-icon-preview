@@ -6,7 +6,10 @@ A web-based visual preview tool for VSCode Material Icon Theme extension. Help d
 
 **Try it now:** [https://vscode-material-icon-preview.vercel.app/](https://vscode-material-icon-preview.vercel.app/)
 
-![](assets/20250814_212823_image.png)
+
+![](assets/20250814_230334_color_filter.gif)
+
+
 
 ## 🎯 About This Project
 
@@ -15,6 +18,7 @@ VSCode Material Icon Theme is an excellent extension that provides beautiful ico
 - **📁 826+ Icons Display**: Browse all icons in a clean grid layout
 - **🔍 Smart Search**: Support fuzzy search to quickly find the icons you need
 - **🏷️ Category Filtering**: Filter by file icons or folder icons
+- **🎨 Color-Based Filtering**: Advanced color picker with tolerance range to find icons by color similarity
 - **📋 One-Click Copy**: Click on an icon to copy its icon ID
 - **🌓 Light/Dark Toggle**: Some icons support light/dark themes, hover over the icon to show the toggle button in the top right corner
 
@@ -30,6 +34,14 @@ VSCode Material Icon Theme is an excellent extension that provides beautiful ico
 - **File Icons**: Show all file type related icons
 - **Folder Icons**: Show all folder related icons
 - **Combined Filtering**: Support combination of search and category filtering
+
+### 🎨 Advanced Color Filtering
+
+- **Color Range Selection**: Click on the color picker to select from preset colors or input custom HEX values
+- **Tolerance Control**: Adjust the color matching range with a slider (5%-50% tolerance)
+- **Intelligent Algorithm**: Uses Euclidean distance in RGB color space to find icons with similar colors
+- **Real-time Filtering**: Icons are filtered instantly based on the selected color and tolerance range
+- **Visual Feedback**: Selected color is displayed with a preview circle and tolerance indicator
 
 ### 📋 Convenient Copy Function
 
@@ -60,6 +72,7 @@ This is a TurboRepo-based monorepo project, containing:
 - **Build Tool**: Vite
 - **Deployment**: Vercel
 - **Virtualization**: @tanstack/react-virtual (optimizes rendering performance for large number of icons)
+- **Color Algorithm**: Custom Euclidean distance calculation in RGB color space for intelligent color matching
 
 ## 🚀 Local Development
 

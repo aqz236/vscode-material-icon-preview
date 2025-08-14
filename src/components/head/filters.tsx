@@ -1,6 +1,7 @@
 import { ChevronDown, Filter } from 'lucide-react';
 import { categories, iconPacks } from './constants';
 import type { IconCategory } from '@/lib/icons';
+import { ColorPicker } from '@/components/ui/color-picker';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,11 +12,23 @@ import {
 interface FiltersProps {
   category?: IconCategory;
   iconPack?: string;
+  colorFilter?: { color: string; radius: number };
   onCategoryChange: (category?: IconCategory) => void;
   onIconPackChange: (pack?: string) => void;
+  onColorFilterChange: (colorFilter?: { color: string; radius: number }) => void;
 }
 
-export function Filters({ category, iconPack, onCategoryChange, onIconPackChange }: FiltersProps) {
+export function Filters({ category, iconPack, colorFilter, onCategoryChange, onIconPackChange, onColorFilterChange }: FiltersProps) {
+  const handleColorChange = (color?: string, radius?: number) => {
+    if (color && radius !== undefined) {
+      onColorFilterChange({ color, radius });
+    }
+  };
+
+  const handleColorClear = () => {
+    onColorFilterChange(undefined);
+  };
+
   return (
     <div className="flex items-center gap-3">
       <div className="flex items-center gap-2">
@@ -30,7 +43,7 @@ export function Filters({ category, iconPack, onCategoryChange, onIconPackChange
                  focus:outline-none focus:bg-white/30 dark:focus:bg-black/30
                  transition-all duration-200 shadow-inner
                  flex items-center gap-2 min-w-[120px] justify-between">
-          <span>{category ? categories.find(cat => cat.value === category)?.label : 'All Category'}</span>
+          <span>{category ? categories.find(cat => cat.value === category)?.label : 'All'}</span>
           <ChevronDown className="w-4 h-4" />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="backdrop-blur-md bg-white/90 dark:bg-black/90 border border-white/30 dark:border-gray-600/30">
@@ -38,7 +51,7 @@ export function Filters({ category, iconPack, onCategoryChange, onIconPackChange
             onClick={() => onCategoryChange(undefined)}
             className="cursor-pointer"
           >
-            All Category
+            All
           </DropdownMenuItem>
           {categories.map((cat) => (
             <DropdownMenuItem 
@@ -80,6 +93,14 @@ export function Filters({ category, iconPack, onCategoryChange, onIconPackChange
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
+
+      {/* 颜色筛选器 */}
+      <ColorPicker
+        selectedColor={colorFilter?.color}
+        colorRadius={colorFilter?.radius}
+        onColorChange={handleColorChange}
+        onClear={handleColorClear}
+      />
     </div>
   );
 }
