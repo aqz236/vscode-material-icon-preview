@@ -1,7 +1,7 @@
-import { SearchBox } from './head/search-box';
-import { Filters } from './head/filters';
-import { ViewControls } from './head/view-controls';
-import type { HeadProps } from './head/types';
+import { SearchBox } from './search-box';
+import { Filters } from './filters';
+import { ViewControls } from './view-controls';
+import type { HeadProps } from './types';
 
 export function Head({
   searchTerm,

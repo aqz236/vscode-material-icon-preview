@@ -12,7 +12,7 @@
     "format": "prettier",
     "check": "prettier --write . && eslint --fix",
     "copy-icons": "rm -rf public/icons && cp -r node_modules/material-icon-theme/icons public/icons",
-    "generate-meta": "bun run scripts/generate-icons.ts"
+    "generate-meta": "bun run scripts/generate-icon-meta"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.0",
