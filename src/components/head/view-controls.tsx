@@ -1,44 +1,25 @@
 import { Grid2X2, Grid3X3 } from 'lucide-react';
-import { ThemeToggle } from '@/components/theme-toggle';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Button } from '@/components/ui/button';
 
 interface ViewControlsProps {
   viewSize: 'sm' | 'md';
   onViewSizeChange: (size: 'sm' | 'md') => void;
 }
 
-const viewSizes = [
-  { value: 'sm' as const, label: 'sm', icon: <Grid3X3 className="w-4 h-4" /> },
-  { value: 'md' as const, label: 'md', icon: <Grid2X2 className="w-4 h-4" /> },
-];
-
 export function ViewControls({ viewSize, onViewSizeChange }: ViewControlsProps) {
+  const toggleViewSize = () => {
+    onViewSizeChange(viewSize === 'sm' ? 'md' : 'sm');
+  };
+
   return (
-    <div className="flex items-center gap-3 ml-auto">
-      <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-muted-foreground">
-          View: 
-        </span>
-        <ToggleGroup 
-          type="single" 
-          value={viewSize} 
-          onValueChange={(value: string) => value && onViewSizeChange(value as 'sm' | 'md')}
-          variant="outline"
-          size="sm"
-        >
-          {viewSizes.map((size) => (
-            <ToggleGroupItem 
-              key={size.value}
-              value={size.value}
-              aria-label={`${size.label}Icon`}
-            >
-              {size.icon}
-            </ToggleGroupItem>
-          ))}
-        </ToggleGroup>
-      </div>
-      {/* 主题切换按钮 */}
-      <ThemeToggle />
-    </div>
+    <Button variant="outline" size="icon" onClick={toggleViewSize}>
+      <Grid3X3 className={`h-[1.2rem] w-[1.2rem] transition-all ${
+        viewSize === 'sm' ? 'rotate-0 scale-100' : '-rotate-90 scale-0'
+      }`} />
+      <Grid2X2 className={`absolute h-[1.2rem] w-[1.2rem] transition-all ${
+        viewSize === 'md' ? 'rotate-0 scale-100' : 'rotate-90 scale-0'
+      }`} />
+      <span className="sr-only">Toggle view size</span>
+    </Button>
   );
 }
