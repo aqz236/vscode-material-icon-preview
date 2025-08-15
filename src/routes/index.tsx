@@ -4,6 +4,8 @@ import type { IconCategory, IconInfo } from '@/lib/icons';
 import { loadIconsMetadata, searchIcons } from '@/lib/icons';
 import { VirtualIconGrid } from '@/components/virtual-icon-grid';
 import { Head } from '@/components/head';
+import { HeadMobile } from '@/components/head/mobile';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 
 export const Route = createFileRoute('/')({
   component: App,
@@ -12,6 +14,9 @@ export const Route = createFileRoute('/')({
 })
 
 function App() {
+  // 检测是否为移动端
+  const isMobile = useIsMobile(768); // 768px 以下为移动端
+  
   // 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<IconCategory | undefined>();
@@ -21,6 +26,13 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [allIcons, setAllIcons] = useState<Array<IconInfo>>([]);
   const scrollContainerRef = useRef<HTMLElement>(null);
+
+  // 根据屏幕尺寸自动调整默认视图大小
+  useEffect(() => {
+    if (isMobile) {
+      setViewSize('sm'); // 移动端固定使用小图标
+    }
+  }, [isMobile]);
 
   // Asynchronously load pre-generated icon data
   useEffect(() => {
@@ -69,23 +81,43 @@ function App() {
     setViewSize(size);
   };
 
+  // 头部组件的通用 props
+  const headProps = {
+    searchTerm,
+    category: selectedCategory,
+    iconPack: selectedIconPack,
+    colorFilter,
+    viewSize,
+    onSearchChange: handleSearchChange,
+    onCategoryChange: handleCategoryChange,
+    onIconPackChange: handleIconPackChange,
+    onColorFilterChange: handleColorFilterChange,
+    onViewSizeChange: handleViewSizeChange,
+    totalCount: searchResult.totalCount,
+  };
+
+  // 移动端头部组件的 props（不包含视图相关）
+  const mobileHeadProps = {
+    searchTerm,
+    category: selectedCategory,
+    iconPack: selectedIconPack,
+    colorFilter,
+    onSearchChange: handleSearchChange,
+    onCategoryChange: handleCategoryChange,
+    onIconPackChange: handleIconPackChange,
+    onColorFilterChange: handleColorFilterChange,
+    totalCount: searchResult.totalCount,
+  };
+
   // 临时类型转换移除，现在使用正确的类型
   return (
     <div className="h-screen flex flex-col">
-      {/* 头部组件 */}
-      <Head
-        searchTerm={searchTerm}
-        category={selectedCategory}
-        iconPack={selectedIconPack}
-        colorFilter={colorFilter}
-        viewSize={viewSize}
-        onSearchChange={handleSearchChange}
-        onCategoryChange={handleCategoryChange}
-        onIconPackChange={handleIconPackChange}
-        onColorFilterChange={handleColorFilterChange}
-        onViewSizeChange={handleViewSizeChange}
-        totalCount={searchResult.totalCount}
-      />
+      {/* 响应式头部组件 - 根据屏幕尺寸动态切换 */}
+      {isMobile ? (
+        <HeadMobile {...mobileHeadProps} />
+      ) : (
+        <Head {...headProps} />
+      )}
 
       {/* 主内容区域 - 在这里添加滚动容器 */}
       <main ref={scrollContainerRef} className="flex-1 overflow-auto">

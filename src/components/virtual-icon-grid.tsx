@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { toast } from 'sonner';
 import { Moon, Sun } from 'lucide-react';
@@ -12,19 +12,18 @@ interface BaseIconCardProps {
 
 // 从原有组件复制样式，避免类型问题
 function SmallIconCard({ icon, onSelect }: BaseIconCardProps) {
-  const [isDarkVersion, setIsDarkVersion] = React.useState(false);
+  const [isDarkVersion, setIsDarkVersion] = useState(false);
   
-  // 根据当前状态选择图标路径
-  const getIconUrl = () => {
+  // 优化：使用 useMemo 缓存图标 URL 计算
+  const iconUrl = useMemo(() => {
     if (isDarkVersion && icon.hasLightVersion && icon.lightIconPath) {
       return `/icons/${icon.lightIconPath.replace('./../icons/', '')}`;
     }
     return `/icons/${icon.iconPath.replace('./../icons/', '')}`;
-  };
-  
-  const iconUrl = getIconUrl();
+  }, [isDarkVersion, icon.hasLightVersion, icon.lightIconPath, icon.iconPath]);
 
-  const handleClick = async () => {
+  // 优化：使用 useCallback 避免函数重新创建
+  const handleClick = useCallback(async () => {
     // 打印图标的所有信息到控制台
     console.log('Icon Info:', icon);
     
@@ -39,16 +38,16 @@ function SmallIconCard({ icon, onSelect }: BaseIconCardProps) {
     
     // 调用原有的 onSelect 回调
     onSelect?.(icon);
-  };
+  }, [icon, onSelect]);
 
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+  const handleImageError = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
     console.warn(`Failed to load icon: ${iconUrl}`, e);
-  };
+  }, [iconUrl]);
 
-  const handleToggleTheme = (e: React.MouseEvent) => {
+  const handleToggleTheme = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     setIsDarkVersion(!isDarkVersion);
-  };
+  }, [isDarkVersion]);
 
   return (
     <div
@@ -98,19 +97,17 @@ function SmallIconCard({ icon, onSelect }: BaseIconCardProps) {
 }
 
 function MediumIconCard({ icon, onSelect }: BaseIconCardProps) {
-  const [isDarkVersion, setIsDarkVersion] = React.useState(false);
+  const [isDarkVersion, setIsDarkVersion] = useState(false);
   
-  // 根据当前状态选择图标路径
-  const getIconUrl = () => {
+  // 优化：使用 useMemo 缓存图标 URL 计算
+  const iconUrl = useMemo(() => {
     if (isDarkVersion && icon.hasLightVersion && icon.lightIconPath) {
       return `/icons/${icon.lightIconPath.replace('./../icons/', '')}`;
     }
     return `/icons/${icon.iconPath.replace('./../icons/', '')}`;
-  };
-  
-  const iconUrl = getIconUrl();
+  }, [isDarkVersion, icon.hasLightVersion, icon.lightIconPath, icon.iconPath]);
 
-  const handleClick = async () => {
+  const handleClick = useCallback(async () => {
     // 打印图标的所有信息到控制台
     console.log('Icon Info:', icon);
     
@@ -125,16 +122,16 @@ function MediumIconCard({ icon, onSelect }: BaseIconCardProps) {
     
     // 调用原有的 onSelect 回调
     onSelect?.(icon);
-  };
+  }, [icon, onSelect]);
 
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+  const handleImageError = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
     console.warn(`Failed to load icon: ${iconUrl}`, e);
-  };
+  }, [iconUrl]);
 
-  const handleToggleTheme = (e: React.MouseEvent) => {
+  const handleToggleTheme = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     setIsDarkVersion(!isDarkVersion);
-  };
+  }, [isDarkVersion]);
 
   return (
     <div
@@ -207,17 +204,18 @@ export function VirtualIconGrid({
   className = '',
   scrollElement
 }: VirtualIconGridProps) {
-  const parentRef = React.useRef<HTMLDivElement>(null);
-  const [containerWidth, setContainerWidth] = React.useState(1280);
+  const parentRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState(1280);
+
+  // 优化：防抖的宽度更新函数
+  const updateWidth = useCallback(() => {
+    if (parentRef.current) {
+      setContainerWidth(parentRef.current.clientWidth);
+    }
+  }, []);
 
   // 监听容器宽度变化
-  React.useEffect(() => {
-    const updateWidth = () => {
-      if (parentRef.current) {
-        setContainerWidth(parentRef.current.clientWidth);
-      }
-    };
-
+  useEffect(() => {
     updateWidth();
     
     const resizeObserver = new ResizeObserver(updateWidth);
@@ -228,24 +226,20 @@ export function VirtualIconGrid({
     return () => {
       resizeObserver.disconnect();
     };
-  }, []);
+  }, [updateWidth]);
+
+  // 优化：预计算布局常量，避免重复计算
+  const layoutConfig = useMemo(() => ({
+    sm: { iconWidth: 64, gap: 12, padding: 32, estimateSize: 80, gridGap: 'gap-3' },
+    md: { iconWidth: 112, gap: 16, padding: 32, estimateSize: 140, gridGap: 'gap-4' }
+  }), []);
 
   // 根据容器宽度和图标大小计算每行的列数
-  const columnsPerRow = React.useMemo(() => {
-    if (size === 'sm') {
-      const iconWidth = 64; // w-16 = 64px
-      const gap = 12; // gap-3 = 12px
-      const padding = 32; // p-4 = 16px * 2
-      const availableWidth = containerWidth - padding;
-      return Math.max(1, Math.floor(availableWidth / (iconWidth + gap)));
-    } else {
-      const iconWidth = 112; // w-28 = 112px
-      const gap = 16; // gap-4 = 16px
-      const padding = 32; // p-4 = 16px * 2
-      const availableWidth = containerWidth - padding;
-      return Math.max(1, Math.floor(availableWidth / (iconWidth + gap)));
-    }
-  }, [containerWidth, size]);
+  const columnsPerRow = useMemo(() => {
+    const config = layoutConfig[size];
+    const availableWidth = containerWidth - config.padding;
+    return Math.max(1, Math.floor(availableWidth / (config.iconWidth + config.gap)));
+  }, [containerWidth, size, layoutConfig]);
 
   // 计算总行数
   const totalRows = Math.ceil(icons.length / columnsPerRow);
@@ -254,13 +248,13 @@ export function VirtualIconGrid({
   const virtualizer = useVirtualizer({
     count: totalRows,
     getScrollElement: () => scrollElement || (parentRef.current?.parentElement) || null,
-    estimateSize: () => (size === 'sm' ? 80 : 140),
+    estimateSize: () => layoutConfig[size].estimateSize,
     overscan: 2,
   });
 
   const items = virtualizer.getVirtualItems();
   const IconComponent = size === 'sm' ? SmallIconCard : MediumIconCard;
-  const gridGap = size === 'sm' ? 'gap-3' : 'gap-4';
+  const gridGap = layoutConfig[size].gridGap;
 
   return (
     <div className={className} ref={parentRef}>
