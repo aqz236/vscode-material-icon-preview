@@ -1,4 +1,5 @@
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
+import { Analytics } from "@vercel/analytics/next"
 import appCss from '../styles.css?url'
 import { Toaster } from '@/components/ui/sonner'
 import { ThemeProvider } from '@/components/theme-provider'
@@ -75,6 +76,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <Toaster />
         </ThemeProvider>
         <Scripts />
+        <Analytics />
       </body>
     </html>
   )
