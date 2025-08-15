@@ -7,14 +7,14 @@ A web-based visual preview tool for VSCode Material Icon Theme extension. Help d
 **Try it now:** [https://vscode-material-icon-preview.vercel.app/](https://vscode-material-icon-preview.vercel.app/)
 
 ### 🎨 Color Filter in Action
+
 ![Color Filter Demo](assets/20250814_230334_color_filter.gif)
 *Advanced color picker with tolerance control - select any color and adjust the matching range to find icons with similar colors*
 
 ### 📱 Compact View & Large Display
+
 ![Compact Grid View](assets/20250814_231651_image.png)
 *Small icon view mode allows you to see more icons at once while maintaining excellent visual clarity*
-
-
 
 ## 🎯 About This Project
 
@@ -24,7 +24,7 @@ VSCode Material Icon Theme is an excellent extension that provides beautiful ico
 - **🔍 Smart Search**: Support fuzzy search to quickly find the icons you need
 - **🏷️ Category Filtering**: Filter by file icons or folder icons
 - **🎨 Color-Based Filtering**: Advanced color picker with tolerance range to find icons by color similarity
-- **📋 One-Click Copy**: Click on an icon to copy its icon ID
+- **📋 One-Click Copy**: Click on an icon to copy its icon name
 - **🌓 Light/Dark Toggle**: Some icons support light/dark themes, hover over the icon to show the toggle button in the top right corner
 
 ## ✨ Core Features
@@ -50,7 +50,7 @@ VSCode Material Icon Theme is an excellent extension that provides beautiful ico
 
 ### 📋 Convenient Copy Function
 
-- **Click to Copy**: Directly click on an icon to copy its icon ID to clipboard
+- **Click to Copy**: Directly click on an icon to copy its icon name to clipboard
 - **Instant Feedback**: Show confirmation message after successful copy
 - **Accurate Identifier**: Copy the exact identifier of the icon for direct use in development
 

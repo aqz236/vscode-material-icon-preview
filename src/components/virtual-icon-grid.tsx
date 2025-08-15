@@ -29,8 +29,8 @@ function SmallIconCard({ icon, onSelect }: BaseIconCardProps) {
     
     // 复制 iconId 到剪切板
     try {
-      await navigator.clipboard.writeText(icon.iconId);
-      toast.success('Icon ID copied to clipboard!');
+      await navigator.clipboard.writeText(icon.name);
+      toast.success('Icon name copied to clipboard!');
     } catch (err) {
       console.error('Failed to copy to clipboard:', err);
       toast.error('Failed to copy to clipboard');
