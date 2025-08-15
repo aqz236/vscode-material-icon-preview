@@ -27,10 +27,16 @@ function SmallIconCard({ icon, onSelect }: BaseIconCardProps) {
     // 打印图标的所有信息到控制台
     console.log('Icon Info:', icon);
     
-    // 复制 iconId 到剪切板
+    // 复制 icon 信息 到剪切板
     try {
-      await navigator.clipboard.writeText(icon.name);
-      toast.success('Icon name copied to clipboard!');
+      // 如果是目录就复制name，否则复制 iconId
+      if (icon.category === 'folder') {
+        await navigator.clipboard.writeText(icon.name);
+        toast.success(`Copied: ${icon.name}`);
+      } else {
+        await navigator.clipboard.writeText(icon.iconId);
+        toast.success(`Copied: ${icon.iconId}`);
+      }
     } catch (err) {
       console.error('Failed to copy to clipboard:', err);
       toast.error('Failed to copy to clipboard');
