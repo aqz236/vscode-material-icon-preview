@@ -3,6 +3,7 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import { toast } from 'sonner';
 import { Moon, Sun } from 'lucide-react';
 import type { IconInfo } from '@/lib/icons';
+import { CachedIcon } from '@/components/cached-icon';
 
 // 重新定义图标卡片组件，避免类型冲突
 interface BaseIconCardProps {
@@ -33,10 +34,6 @@ function SmallIconCard({ icon, onSelect }: BaseIconCardProps) {
     // 调用原有的 onSelect 回调
     onSelect?.(icon);
   }, [icon, onSelect]);
-
-  const handleImageError = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
-    console.warn(`Failed to load icon: ${iconUrl}`, e);
-  }, [iconUrl]);
 
   const handleToggleTheme = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -78,11 +75,11 @@ function SmallIconCard({ icon, onSelect }: BaseIconCardProps) {
       )}
       
       <div className="w-10 h-10 flex items-center justify-center">
-        <img
+        <CachedIcon
           src={iconUrl}
           alt={icon.name}
           className="w-full h-full object-contain transition-opacity duration-300 ease-in-out"
-          onError={handleImageError}
+          onError={(error) => console.warn(`Failed to load icon: ${iconUrl}`, error)}
           key={iconUrl} // 强制重新渲染当切换版本时
         />
       </div>
@@ -112,10 +109,6 @@ function MediumIconCard({ icon, onSelect }: BaseIconCardProps) {
     // 调用原有的 onSelect 回调
     onSelect?.(icon);
   }, [icon, onSelect]);
-
-  const handleImageError = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
-    console.warn(`Failed to load icon: ${iconUrl}`, e);
-  }, [iconUrl]);
 
   const handleToggleTheme = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -158,11 +151,11 @@ function MediumIconCard({ icon, onSelect }: BaseIconCardProps) {
       )}
       
       <div className="w-12 h-12 flex items-center justify-center">
-        <img
+        <CachedIcon
           src={iconUrl}
           alt={icon.name}
           className="w-full h-full object-contain transition-opacity duration-300 ease-in-out"
-          onError={handleImageError}
+          onError={(error) => console.warn(`Failed to load icon: ${iconUrl}`, error)}
           key={iconUrl} // 强制重新渲染当切换版本时
         />
       </div>

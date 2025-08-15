@@ -1,7 +1,7 @@
 import { Filter } from 'lucide-react';
 import { categories, iconPacks } from '../constants';
 import type { IconCategory } from '@/lib/icons';
-import { ColorPicker } from '@/components/ui/color-picker';
+import { ColorPicker } from '@/components/color-picker';
 import {
   DropdownMenu,
   DropdownMenuContent,

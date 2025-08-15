@@ -1,7 +1,7 @@
 import { ChevronDown, Filter } from 'lucide-react';
 import { categories, iconPacks } from './constants';
 import type { IconCategory } from '@/lib/icons';
-import { ColorPicker } from '@/components/ui/color-picker';
+import { ColorPicker } from '@/components/color-picker';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -101,6 +101,7 @@ export function Filters({ category, iconPack, colorFilter, onCategoryChange, onI
         onColorChange={handleColorChange}
         onClear={handleColorClear}
       />
+
     </div>
   );
 }
