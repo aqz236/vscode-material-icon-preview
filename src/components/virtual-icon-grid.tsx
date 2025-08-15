@@ -23,24 +23,12 @@ function SmallIconCard({ icon, onSelect }: BaseIconCardProps) {
   }, [isDarkVersion, icon.hasLightVersion, icon.lightIconPath, icon.iconPath]);
 
   // 优化：使用 useCallback 避免函数重新创建
-  const handleClick = useCallback(async () => {
+  const handleClick = useCallback(() => {
     // 打印图标的所有信息到控制台
     console.log('Icon Info:', icon);
     
     // 复制 icon 信息 到剪切板
-    try {
-      // 如果是目录就复制name，否则复制 iconId
-      if (icon.category === 'folder') {
-        await navigator.clipboard.writeText(icon.name);
-        toast.success(`Copied: ${icon.name}`);
-      } else {
-        await navigator.clipboard.writeText(icon.iconId);
-        toast.success(`Copied: ${icon.iconId}`);
-      }
-    } catch (err) {
-      console.error('Failed to copy to clipboard:', err);
-      toast.error('Failed to copy to clipboard');
-    }
+    copyIcon(icon);
     
     // 调用原有的 onSelect 回调
     onSelect?.(icon);
@@ -113,18 +101,13 @@ function MediumIconCard({ icon, onSelect }: BaseIconCardProps) {
     return `/icons/${icon.iconPath.replace('./../icons/', '')}`;
   }, [isDarkVersion, icon.hasLightVersion, icon.lightIconPath, icon.iconPath]);
 
-  const handleClick = useCallback(async () => {
+  const handleClick = useCallback(() => {
     // 打印图标的所有信息到控制台
     console.log('Icon Info:', icon);
     
-    // 复制 iconId 到剪切板
-    try {
-      await navigator.clipboard.writeText(icon.name);
-      toast.success('Icon name copied to clipboard!');
-    } catch (err) {
-      console.error('Failed to copy to clipboard:', err);
-      toast.error('Failed to copy to clipboard');
-    }
+    // 复制 icon 信息 到剪切板
+    copyIcon(icon);
+    
     
     // 调用原有的 onSelect 回调
     onSelect?.(icon);
@@ -201,6 +184,23 @@ interface VirtualIconGridProps {
   className?: string;
   scrollElement?: HTMLElement | null;
   onIconSelect?: (icon: IconInfo) => void;
+}
+
+async function copyIcon(icon: IconInfo) {
+    // 复制 icon 信息 到剪切板
+    try {
+      // 如果是目录就复制name，否则复制 iconId
+      if (icon.category === 'folder') {
+        await navigator.clipboard.writeText(icon.name);
+        toast.success(`Copied: ${icon.name}`);
+      } else {
+        await navigator.clipboard.writeText(icon.iconId);
+        toast.success(`Copied: ${icon.iconId}`);
+      }
+    } catch (err) {
+      console.error('Failed to copy to clipboard:', err);
+      toast.error('Failed to copy to clipboard');
+    }
 }
 
 export function VirtualIconGrid({
