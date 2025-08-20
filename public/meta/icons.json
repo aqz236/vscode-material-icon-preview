@@ -2031,6 +2031,19 @@
       ]
     },
     {
+      "id": "angular-folder-interceptor",
+      "name": "interceptor",
+      "iconPath": "./../icons/folder-interceptor.svg",
+      "category": "folder",
+      "iconId": "folder-interceptor",
+      "pack": "angular",
+      "hasLightVersion": false,
+      "colors": [
+        "#ff9800",
+        "#ffe0b2"
+      ]
+    },
+    {
       "id": "angular-folder-svg",
       "name": "svg",
       "iconPath": "./../icons/folder-svg.svg",
@@ -2386,6 +2399,19 @@
       "colors": [
         "#1e88e5",
         "#bbdefb"
+      ]
+    },
+    {
+      "id": "angular-folder-prompt",
+      "name": "prompt",
+      "iconPath": "./../icons/folder-prompts.svg",
+      "category": "folder",
+      "iconId": "folder-prompts",
+      "pack": "angular",
+      "hasLightVersion": false,
+      "colors": [
+        "#5c6bc0",
+        "#c5cae9"
       ]
     },
     {
@@ -3098,6 +3124,19 @@
       ]
     },
     {
+      "id": "angular-folder-.claude",
+      "name": ".claude",
+      "iconPath": "./../icons/folder-claude.svg",
+      "category": "folder",
+      "iconId": "folder-claude",
+      "pack": "angular",
+      "hasLightVersion": false,
+      "colors": [
+        "#ff7043",
+        "#ffccbc"
+      ]
+    },
+    {
       "id": "angular-ext-60",
       "name": ".60",
       "iconPath": "./../icons/slint.svg",
@@ -3250,6 +3289,18 @@
         "#ff5722",
         "#00e676",
         "#03a9f4"
+      ]
+    },
+    {
+      "id": "angular-ext-prompt.md",
+      "name": ".prompt.md",
+      "iconPath": "./../icons/prompt.svg",
+      "category": "fileExtension",
+      "iconId": "prompt",
+      "pack": "angular",
+      "hasLightVersion": false,
+      "colors": [
+        "#7986cb"
       ]
     },
     {
@@ -3512,6 +3563,18 @@
       "hasLightVersion": false,
       "colors": [
         "#ab47bc"
+      ]
+    },
+    {
+      "id": "angular-ext-vcl",
+      "name": ".vcl",
+      "iconPath": "./../icons/varnish.svg",
+      "category": "fileExtension",
+      "iconId": "varnish",
+      "pack": "angular",
+      "hasLightVersion": false,
+      "colors": [
+        "#0288d1"
       ]
     },
     {
@@ -7427,6 +7490,20 @@
       ]
     },
     {
+      "id": "angular-ext-css.ts",
+      "name": ".css.ts",
+      "iconPath": "./../icons/vanilla-extract.svg",
+      "category": "fileExtension",
+      "iconId": "vanilla-extract",
+      "pack": "angular",
+      "hasLightVersion": false,
+      "colors": [
+        "#4dd0e1",
+        "#795548",
+        "#f06292"
+      ]
+    },
+    {
       "id": "angular-file-justfile",
       "name": "justfile",
       "iconPath": "./../icons/just.svg",
@@ -9702,6 +9779,18 @@
       ]
     },
     {
+      "id": "angular-file-.lintstagedrc",
+      "name": ".lintstagedrc",
+      "iconPath": "./../icons/lintstaged.svg",
+      "category": "fileName",
+      "iconId": "lintstaged",
+      "pack": "angular",
+      "hasLightVersion": false,
+      "colors": [
+        "#ff5252"
+      ]
+    },
+    {
       "id": "angular-file-histoire.config.js",
       "name": "histoire.config.js",
       "iconPath": "./../icons/histoire.svg",
@@ -9898,6 +9987,18 @@
       "iconPath": "./../icons/oxlint.svg",
       "category": "fileName",
       "iconId": "oxlint",
+      "pack": "angular",
+      "hasLightVersion": false,
+      "colors": [
+        "#ff7043"
+      ]
+    },
+    {
+      "id": "angular-file-CLAUDE.md",
+      "name": "CLAUDE.md",
+      "iconPath": "./../icons/claude.svg",
+      "category": "fileName",
+      "iconId": "claude",
       "pack": "angular",
       "hasLightVersion": false,
       "colors": [
@@ -10576,13 +10677,13 @@
       ]
     }
   ],
-  "totalCount": 826,
+  "totalCount": 834,
   "categories": {
     "file": 1,
-    "folder": 249,
+    "folder": 252,
     "language": 15,
-    "fileExtension": 367,
-    "fileName": 194
+    "fileExtension": 370,
+    "fileName": 196
   },
   "availablePacks": [
     "angular",
