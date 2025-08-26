@@ -7,45 +7,45 @@ import type { IconCategory, IconInfo } from './types.js';
  */
 export function generateAllIcons(): Array<IconInfo> {
   const allIcons: Array<IconInfo> = [];
-  const seenPaths = new Set<string>();
+  const seenIconIds = new Set<string>();
   
   console.log('正在生成默认图标包数据...');
   // 获取默认图标包的图标（这些是基础图标，不属于任何特定包）
   const defaultManifest = getIconManifest();
   const defaultIcons = extractIconsFromManifest(defaultManifest);
   
-  // 添加默认图标，不添加包前缀
-  defaultIcons.forEach(icon => {
-    if (!seenPaths.has(icon.iconPath)) {
-      allIcons.push(icon);
-      seenPaths.add(icon.iconPath);
-    }
-  });
+  // 收集所有图标（先不去重，稍后统一处理）
+  const tempIcons: Array<IconInfo & { pack?: string }> = [...defaultIcons];
 
-  console.log(`已生成 ${defaultIcons.length} 个默认图标`);
+  console.log(`已收集 ${defaultIcons.length} 个默认图标`);
 
   // 获取各个图标包的图标
   availableIconPacks.forEach((pack, index) => {
-    console.log(`正在生成 ${pack} 图标包数据... (${index + 1}/${availableIconPacks.length})`);
+    console.log(`正在收集 ${pack} 图标包数据... (${index + 1}/${availableIconPacks.length})`);
     
     const manifest = getIconManifest(pack);
     const icons = extractIconsFromManifest(manifest);
     
-    // 只添加该图标包特有的新图标
-    const newPackIcons = icons.filter(icon => !seenPaths.has(icon.iconPath));
-    const iconsWithPack = newPackIcons.map(icon => ({ 
+    // 收集图标包特有的图标，添加包信息
+    const iconsWithPack = icons.map(icon => ({ 
       ...icon, 
       pack,
       // 对于图标包特有的图标，使用更合理的 ID 命名
       id: `${pack}-${icon.name.replace(/[^a-zA-Z0-9-]/g, '-')}`
     }));
     
-    iconsWithPack.forEach(icon => {
+    tempIcons.push(...iconsWithPack);
+    console.log(`${pack} 包收集了 ${icons.length} 个图标`);
+  });
+
+  console.log(`总共收集了 ${tempIcons.length} 个图标，开始去重...`);
+
+  // 统一去重：优先保留默认包的图标，然后是特定包的图标
+  tempIcons.forEach(icon => {
+    if (!seenIconIds.has(icon.iconId)) {
       allIcons.push(icon);
-      seenPaths.add(icon.iconPath);
-    });
-    
-    console.log(`${pack} 包新增了 ${newPackIcons.length} 个特有图标`);
+      seenIconIds.add(icon.iconId);
+    }
   });
 
   // 最终检查并确保所有 id 都是唯一的
