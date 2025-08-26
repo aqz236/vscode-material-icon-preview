@@ -7,12 +7,20 @@ import type { IconCategory, IconInfo } from './types.js';
  */
 export function generateAllIcons(): Array<IconInfo> {
   const allIcons: Array<IconInfo> = [];
+  const seenPaths = new Set<string>();
   
   console.log('正在生成默认图标包数据...');
-  // 获取默认图标包的图标
+  // 获取默认图标包的图标（这些是基础图标，不属于任何特定包）
   const defaultManifest = getIconManifest();
   const defaultIcons = extractIconsFromManifest(defaultManifest);
-  allIcons.push(...defaultIcons);
+  
+  // 添加默认图标，不添加包前缀
+  defaultIcons.forEach(icon => {
+    if (!seenPaths.has(icon.iconPath)) {
+      allIcons.push(icon);
+      seenPaths.add(icon.iconPath);
+    }
+  });
 
   console.log(`已生成 ${defaultIcons.length} 个默认图标`);
 
@@ -22,34 +30,27 @@ export function generateAllIcons(): Array<IconInfo> {
     
     const manifest = getIconManifest(pack);
     const icons = extractIconsFromManifest(manifest);
-    const iconsWithPack = icons.map(icon => ({ 
+    
+    // 只添加该图标包特有的新图标
+    const newPackIcons = icons.filter(icon => !seenPaths.has(icon.iconPath));
+    const iconsWithPack = newPackIcons.map(icon => ({ 
       ...icon, 
       pack,
-      // 为每个图标包的图标添加包名前缀，确保 id 唯一
-      id: `${pack}-${icon.id}`
+      // 对于图标包特有的图标，使用更合理的 ID 命名
+      id: `${pack}-${icon.name.replace(/[^a-zA-Z0-9-]/g, '-')}`
     }));
-    allIcons.push(...iconsWithPack);
     
-    console.log(`${pack} 包生成了 ${icons.length} 个图标`);
+    iconsWithPack.forEach(icon => {
+      allIcons.push(icon);
+      seenPaths.add(icon.iconPath);
+    });
+    
+    console.log(`${pack} 包新增了 ${newPackIcons.length} 个特有图标`);
   });
-
-  console.log('正在去重和唯一化ID...');
-  // 去重（基于 iconPath）并确保 id 唯一
-  const uniqueIcons = allIcons.reduce((acc, icon) => {
-    const existingIcon = acc.find(existing => existing.iconPath === icon.iconPath);
-    if (!existingIcon) {
-      acc.push(icon);
-    } else if (icon.pack && !existingIcon.pack) {
-      // 如果新图标有包信息而现有图标没有，则替换
-      const index = acc.indexOf(existingIcon);
-      acc[index] = icon;
-    }
-    return acc;
-  }, [] as Array<IconInfo>);
 
   // 最终检查并确保所有 id 都是唯一的
   const idSet = new Set<string>();
-  const finalIcons = uniqueIcons.map((icon) => {
+  const finalIcons = allIcons.map((icon) => {
     let uniqueId = icon.id;
     let counter = 1;
     
@@ -67,7 +68,7 @@ export function generateAllIcons(): Array<IconInfo> {
     };
   });
 
-  console.log(`去重后共生成 ${finalIcons.length} 个图标`);
+  console.log(`最终生成了 ${finalIcons.length} 个唯一图标`);
   return finalIcons;
 }
 
