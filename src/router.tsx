@@ -12,6 +12,16 @@ export const createRouter = () => {
   })
 }
 
+// Create router instance for TanStack Start
+let router: ReturnType<typeof createRouter> | undefined
+
+export function getRouter() {
+  if (!router) {
+    router = createRouter()
+  }
+  return router
+}
+
 // Register the router instance for type safety
 declare module '@tanstack/react-router' {
   interface Register {
